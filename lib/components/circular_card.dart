@@ -29,20 +29,22 @@ class HealthCircularCard extends StatelessWidget {
             animation: true,
             percent: value,
             center: Text(
-              "${value * 100}%",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              "${double.parse((value * 100).toString()).toStringAsFixed(2)}%",
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
             ),
             footer: Column(
               children: [
                 if (subtitle != null)
                   Text(
                     subtitle!,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 17.0),
                   ),
                 Text(
                   title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 17.0),
                 ),
               ],
             ),

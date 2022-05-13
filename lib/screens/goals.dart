@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:healthapp/components/app_bar.dart';
 import 'package:healthapp/components/background.dart';
-import 'package:healthapp/components/linear_card.dart';
 import 'package:healthapp/components/spacer.dart';
-import 'package:healthapp/util/colors.dart';
 
 import '../components/button.dart';
 import '../components/text_form_feild.dart';
@@ -57,6 +55,7 @@ class GoalsScreen extends StatelessWidget {
                       HealthTextFormFeild(
                         controller: sleepGoalController,
                         text: 'Sleep Goal (Hrs)',
+                        placeholder: getSleepHelperText(),
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                         ],
@@ -65,6 +64,7 @@ class GoalsScreen extends StatelessWidget {
                       HealthTextFormFeild(
                         controller: activityGoalController,
                         text: 'Activity Goal (Cal)',
+                        placeholder: getCalHelperText(),
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                         ],
@@ -81,6 +81,7 @@ class GoalsScreen extends StatelessWidget {
                       HealthTextFormFeild(
                         controller: stepsGoalController,
                         text: 'Steps Goal (Steps)',
+                        placeholder: getStepsHelperText(),
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                         ],
@@ -133,5 +134,48 @@ class GoalsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String? getCalHelperText() {
+    if (user == null) {
+      return null;
+    } else {
+      var gender = user?.gender;
+      if (gender == 'Male') {
+        return 'More than 2500kal is suggest for you';
+      }  else {
+        return 'More than 2000kal is suggest for you';
+      }
+    }
+  }
+
+  String? getStepsHelperText() {
+    if (user == null) {
+      return null;
+    } else {
+      var age = int.parse(user!.age!);
+      if (age > 12 && age < 18) {
+        return '6000 – 10000 steps is suggest for you';
+      } else if (age > 18 && age < 65) {
+        return '7000 – 10000 steps is suggest for you';
+      } else {
+        return '3000 – 10000 steps is suggest for you';
+      }
+    }
+  }
+
+  String? getSleepHelperText() {
+    if (user == null) {
+      return null;
+    } else {
+      var age = int.parse(user!.age!);
+      if (age > 12 && age < 18) {
+        return '8-10 hours sleep is suggest for you';
+      } else if (age > 18 && age < 60) {
+        return '7 or more hours sleep is suggest for you';
+      } else {
+        return null;
+      }
+    }
   }
 }

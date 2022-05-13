@@ -164,7 +164,7 @@ class _ChartScreenState extends State<ChartScreen> {
 
   int getDiff(DateTime createdAt) {
     DateTime dateTimeNow = DateTime.now();
-    final differenceInDays = createdAt.difference(dateTimeNow).inDays;
+    final differenceInDays = dateTimeNow.difference(createdAt).inDays;
     print('getDiff $differenceInDays');
     return differenceInDays;
   }

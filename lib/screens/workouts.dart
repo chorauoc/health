@@ -6,10 +6,21 @@ import 'package:healthapp/components/background.dart';
 import 'package:healthapp/components/spacer.dart';
 import 'package:healthapp/util/colors.dart';
 
+import '../main.dart';
 import '../models/plans/plans.dart';
+import '../models/user.dart';
+import '../providers/user_provider.dart';
 
-class WorkOutPlanScreen extends StatelessWidget {
+class WorkOutPlanScreen extends StatefulWidget {
   WorkOutPlanScreen({Key? key}) : super(key: key);
+
+  @override
+  State<WorkOutPlanScreen> createState() => _WorkOutPlanScreenState();
+}
+
+class _WorkOutPlanScreenState extends State<WorkOutPlanScreen> {
+  int index = 0;
+
   List<Widget> plans = [
     plan1,
     plan2,
@@ -22,6 +33,34 @@ class WorkOutPlanScreen extends StatelessWidget {
     plan9,
     plan10
   ];
+
+  void updatePlan() {
+    User? user = locator<UserProvider>().getSession();
+    if (user != null && !user.hasPlaner) {
+      index = Random().nextInt(plans.length);
+      var update = User()
+        ..name = user.name
+        ..email = user.email
+        ..password = user.password
+        ..username = user.username
+        ..gender = user.gender
+        ..age = user.age
+        ..hasPlaner = true
+        ..planerIndex = index.toString();
+
+      UserState result = locator<UserProvider>().update(update);
+    } else {
+      index = user != null ? int.parse(user.planerIndex!) : 0;
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    updatePlan();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +103,7 @@ class WorkOutPlanScreen extends StatelessWidget {
                         textAlign: TextAlign.justify,
                       ),
                       const HealthSpacer(height: 0.03),
-                      plans[Random().nextInt(plans.length)],
+                      plans[index],
                     ],
                   ),
                 ),

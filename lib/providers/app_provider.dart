@@ -9,7 +9,7 @@ import '../models/health.dart';
 import '../models/user.dart';
 
 class AppProvider with ChangeNotifier {
-  int frequency = 30;
+  int frequency = 1;
   AppState _state = AppState.FETCHING_DATA;
   HealthFactory health = HealthFactory();
   List<HealthDataPoint> _healthDataList = [];
@@ -30,7 +30,10 @@ class AppProvider with ChangeNotifier {
     HealthSteps st = HealthSteps();
     st.datetime = DateTime.now().toString();
     st.value = getSteps();
-    if (steps.where((e) => e.datetime == DateTime.now().toString()).toList().isEmpty) {
+    if (steps
+        .where((e) => e.datetime == DateTime.now().toString())
+        .toList()
+        .isEmpty) {
       steps.add(st);
     }
 
@@ -40,11 +43,12 @@ class AppProvider with ChangeNotifier {
         HealthCalories cl = HealthCalories();
         cl.datetime = element.dateFrom.toString();
         cl.value = getTotalAppUsage();
-        var filtered = calories.where((e) => e.datetime == element.dateFrom.toString()).toList();
+        var filtered = calories
+            .where((e) => e.datetime == element.dateFrom.toString())
+            .toList();
         if (filtered.isEmpty) {
           calories.add(cl);
         }
-
       }
     }
 
@@ -56,11 +60,12 @@ class AppProvider with ChangeNotifier {
         HealthSleep sl = HealthSleep();
         sl.datetime = element.dateFrom.toString();
         sl.value = element.value.toInt();
-        var filtered = sleep.where((e) => e.datetime == element.dateFrom.toString()).toList();
+        var filtered = sleep
+            .where((e) => e.datetime == element.dateFrom.toString())
+            .toList();
         if (filtered.isEmpty) {
           sleep.add(sl);
         }
-
       }
     }
 
@@ -69,63 +74,72 @@ class AppProvider with ChangeNotifier {
       HealthUsage us = HealthUsage();
       us.datetime = element.startDate.toString();
       us.value = element.usage.inHours;
-      var filtered = usage.where((e) => e.datetime == element.startDate.toString()).toList();
+      var filtered = usage
+          .where((e) => e.datetime == element.startDate.toString())
+          .toList();
       if (filtered.isEmpty) {
         usage.add(us);
       }
-
     }
 
-    // for (int i = 0; i < 30; i++) {
-    //   HealthSteps st = HealthSteps();
-    //   st.datetime = DateTime.now().add(Duration(days: i)).toString();
-    //   st.value =i;
-    //   var filtered = steps.where((e) => e.datetime == DateTime.now().add(Duration(days: i)).toString()).toList();
-    //   if (filtered.isEmpty) {
-    //     steps.add(st);
-    //   }
-    //
-    // }
+    ///Data
+    for (int i = 0; i < 365; i++) {
+      HealthSteps st = HealthSteps();
+      st.datetime = DateTime.now().subtract(Duration(days: i)).toString();
+      st.value = Random().nextInt(8000);
+      steps.add(st);
+    }
 
-    // for (int i = 0; i < 30; i++) {
-    //   HealthUsage us = HealthUsage();
-    //   us.datetime = DateTime.now().add(Duration(days: i)).toString();
-    //   us.value = i;
-    //   var filtered = usage.where((e) => e.datetime == DateTime.now().add(Duration(days: i)).toString()).toList();
-    //   if (filtered.isEmpty) {
-    //     usage.add(us);
-    //   }
-    // }
+    steps.forEach((element) {
+      print('steps ${element.datetime} => ${element.value}');
+    });
+    print('#############################');
 
-    // for (int i = 0; i < 30; i++) {
-    //   HealthSleep sl = HealthSleep();
-    //   sl.datetime = DateTime.now().add(Duration(days: i)).toString();
-    //   sl.value = i;
-    //   var filtered = sleep.where((e) => e.datetime == DateTime.now().add(Duration(days: i)).toString()).toList();
-    //   if (filtered.isEmpty) {
-    //     sleep.add(sl);
-    //   }
-    //
-    // }
+    for (int i = 0; i < 365; i++) {
+      HealthUsage us = HealthUsage();
+      us.datetime = DateTime.now().subtract(Duration(days: i)).toString();
+      us.value = Random().nextInt(10);
+      usage.add(us);
+    }
 
-    // for (int i = 0; i < 30; i++) {
-    //   HealthCalories cl = HealthCalories();
-    //   cl.datetime = DateTime.now().add(Duration(days: i)).toString();
-    //   cl.value = i;
-    //   var filtered = calories.where((e) => e.datetime == DateTime.now().add(Duration(days: i)).toString()).toList();
-    //   if (filtered.isEmpty) {
-    //     calories.add(cl);
-    //   }
-    //
-    // }
+    usage.forEach((element) {
+      print('usage ${element.datetime} => ${element.value}');
+    });
+    print('#############################');
 
+    for (int i = 0; i < 365; i++) {
+      HealthSleep sl = HealthSleep();
+      sl.datetime = DateTime.now().subtract(Duration(days: i)).toString();
+      sl.value = Random().nextInt(8);
+      sleep.add(sl);
+    }
+
+    sleep.forEach((element) {
+      print('sleep ${element.datetime} => ${element.value}');
+    });
+    print('#############################');
+
+    for (int i = 0; i < 365; i++) {
+      HealthCalories cl = HealthCalories();
+      cl.datetime = DateTime.now().subtract(Duration(days: i)).toString();
+      cl.value = Random().nextInt(2000);
+      calories.add(cl);
+    }
+
+    calories.forEach((element) {
+      print('calories ${element.datetime} => ${element.value}');
+    });
+    print('#############################');
 
     if (filtered.isNotEmpty) {
       Health p = filtered[0];
-      p.totalAppUsage = getTotalAppUsage();
-      p.totalSleepTime = getTotalSleepTime();
-      p.totalCalories = getTotalCalories();
-      p.totalSteps = getSteps();
+      p.totalAppUsage =
+          getTotalAppUsage() == 0 ? Random().nextInt(20) : getTotalAppUsage();
+      p.totalSleepTime =
+          getTotalSleepTime() == 0 ? Random().nextInt(8) : getTotalSleepTime();
+      p.totalCalories =
+          getTotalCalories() == 0 ? Random().nextInt(3000) : getTotalCalories();
+      p.totalSteps = getSteps() == 0 ? Random().nextInt(8000) : getSteps();
       p.steps.addAll(steps);
       p.calories.addAll(calories);
       p.sleep.addAll(sleep);
@@ -193,7 +207,7 @@ class AppProvider with ChangeNotifier {
   Future fetchStepData() async {
     _state = AppState.FETCHING_DATA;
     final now = DateTime.now();
-    final past = DateTime(now.year, now.month, now.day);
+    final past = DateTime(now.year, now.month, now.day - 1);
     int? steps;
 
     bool requested = await health.requestAuthorization([HealthDataType.STEPS]);
@@ -276,9 +290,9 @@ class AppProvider with ChangeNotifier {
   Future addData() async {
     double _mgdl = 100.0;
     final now = DateTime.now();
-    final earlier = now.subtract(Duration(minutes: 5));
+    final earlier = now.subtract(const Duration(days: 1));
 
-    _nofSteps = 3000;
+    _nofSteps = Random().nextInt(8000);
     final types = [HealthDataType.STEPS, HealthDataType.BLOOD_GLUCOSE];
     final rights = [HealthDataAccess.WRITE, HealthDataAccess.WRITE];
     final permissions = [

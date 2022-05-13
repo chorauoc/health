@@ -21,13 +21,16 @@ class UserAdapter extends TypeAdapter<User> {
       ..password = fields[1] as String?
       ..name = fields[2] as String?
       ..email = fields[3] as String?
-      ..hasPlaner = fields[4] as bool;
+      ..gender = fields[4] as String?
+      ..age = fields[5] as String?
+      ..planerIndex = fields[6] as String?
+      ..hasPlaner = fields[7] as bool;
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.username)
       ..writeByte(1)
@@ -37,6 +40,12 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(3)
       ..write(obj.email)
       ..writeByte(4)
+      ..write(obj.gender)
+      ..writeByte(5)
+      ..write(obj.age)
+      ..writeByte(6)
+      ..write(obj.planerIndex)
+      ..writeByte(7)
       ..write(obj.hasPlaner);
   }
 

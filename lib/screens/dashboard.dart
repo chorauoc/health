@@ -34,12 +34,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void initState() {
-    //_init();
+    _init();
     super.initState();
   }
 
   void _init() async {
-    await locator<AppProvider>().addData();
+    // await locator<AppProvider>().addData();
     await locator<AppProvider>().fetchData();
     await locator<AppProvider>().fetchStepData();
     await locator<AppProvider>().getUsageStats();
@@ -76,7 +76,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             HealthLinearCard(
                               title: 'Quality of Life',
                               value: HealthCalculation
-                                  .calculateQualityOfLifeValue(),
+                                  .calculateQualityOfLifeValue(health!),
                             ),
                           ],
                         ),
@@ -88,14 +88,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               subtitle:
                                   '${health?.totalAppUsage.toString()} Hrs',
                               value:
-                                  HealthCalculation.calculateScreenTimeValue(),
+                                  HealthCalculation.calculateScreenTimeValue(health!),
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ScreenTimeScreen(
                                       value: HealthCalculation
-                                          .calculateScreenTimeValue(),
+                                          .calculateScreenTimeValue(health!),
                                       usage: health?.usage ?? [],
                                     ),
                                   ),
@@ -107,14 +107,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               subtitle:
                                   '${health?.totalSleepTime.toString()} Hrs',
                               value:
-                                  HealthCalculation.calculateSleepTimeValue(),
+                                  HealthCalculation.calculateSleepTimeValue(health!),
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => SleepTimeScreen(
                                       value: HealthCalculation
-                                          .calculateSleepTimeValue(),
+                                          .calculateSleepTimeValue(health!),
                                       usage: health?.sleep ?? [],
                                     ),
                                   ),
@@ -129,14 +129,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             HealthCircularCard(
                               title: 'Steps',
                               subtitle: health?.totalSteps.toString(),
-                              value: HealthCalculation.calculateStepsValue(),
+                              value: HealthCalculation.calculateStepsValue(health!),
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => StepsScreen(
                                       value: HealthCalculation
-                                          .calculateStepsValue(),
+                                          .calculateStepsValue(health!),
                                       usage: health?.steps ?? [],
                                     ),
                                   ),
@@ -147,14 +147,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               title: 'Activity',
                               subtitle:
                                   '${health?.totalCalories.toString()} cal',
-                              value: HealthCalculation.calculateAtivityValue(),
+                              value: HealthCalculation.calculateAtivityValue(health!),
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ActivityScreen(
                                       value: HealthCalculation
-                                          .calculateAtivityValue(),
+                                          .calculateAtivityValue(health!),
                                       usage: health?.calories ?? [],
                                     ),
                                   ),

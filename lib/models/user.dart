@@ -14,5 +14,11 @@ class User extends HiveObject {
   @HiveField(3)
   String? email;
   @HiveField(4)
+  String? gender;
+  @HiveField(5)
+  String? age;
+  @HiveField(6)
+  String? planerIndex;
+  @HiveField(7)
   bool hasPlaner = false;
 }

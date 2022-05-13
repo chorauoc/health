@@ -36,6 +36,9 @@ class UserProvider with ChangeNotifier {
       p.password = user.password;
       p.username = user.username;
       p.hasPlaner = user.hasPlaner;
+      p.gender = user.gender;
+      p.age = user.age;
+      p.planerIndex = user.planerIndex;
       p.save();
       _result = UserState.completed;
     }

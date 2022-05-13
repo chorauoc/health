@@ -39,35 +39,37 @@ class QLLScreen extends StatelessWidget {
             ),
             const HealthSpacer(height: 0.01),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    buildSectionHeader('Sleep Goal'),
-                    buildProgressSection(
-                      '${health?.totalSleepTime}/${goal?.sleepGoal} Hrs',
-                      HealthCalculation.calculateSleepTimeValue(),
+              child: health == null
+                  ? const Center(child: CircularProgressIndicator())
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          buildSectionHeader('Sleep Goal'),
+                          buildProgressSection(
+                            '${health?.totalSleepTime}/${goal?.sleepGoal} Hrs',
+                            HealthCalculation.calculateSleepTimeValue(health!),
+                          ),
+                          const HealthSpacer(height: 0.03),
+                          buildSectionHeader('Activity Goal'),
+                          buildProgressSection(
+                            '${health?.totalCalories}/${goal?.activityGoal} Cal',
+                            HealthCalculation.calculateAtivityValue(health!),
+                          ),
+                          const HealthSpacer(height: 0.03),
+                          buildSectionHeader('Screen Time Goal'),
+                          buildProgressSection(
+                            '${health?.totalAppUsage}/${goal?.screenTime} Hrs',
+                            HealthCalculation.calculateScreenTimeValue(health!),
+                          ),
+                          const HealthSpacer(height: 0.03),
+                          buildSectionHeader('Steps Goal'),
+                          buildProgressSection(
+                            '${health?.totalSteps}/${goal?.stepsGoal} Steps',
+                            HealthCalculation.calculateStepsValue(health!),
+                          ),
+                        ],
+                      ),
                     ),
-                    const HealthSpacer(height: 0.03),
-                    buildSectionHeader('Activity Goal'),
-                    buildProgressSection(
-                      '${health?.totalCalories}/${goal?.activityGoal} Cal',
-                      HealthCalculation.calculateAtivityValue(),
-                    ),
-                    const HealthSpacer(height: 0.03),
-                    buildSectionHeader('Screen Time Goal'),
-                    buildProgressSection(
-                      '${health?.totalAppUsage}/${goal?.screenTime} Hrs',
-                      HealthCalculation.calculateScreenTimeValue(),
-                    ),
-                    const HealthSpacer(height: 0.03),
-                    buildSectionHeader('Steps Goal'),
-                    buildProgressSection(
-                      '${health?.totalSteps}/${goal?.stepsGoal} Steps',
-                      HealthCalculation.calculateStepsValue(),
-                    ),
-                  ],
-                ),
-              ),
             ),
           ],
         ),
