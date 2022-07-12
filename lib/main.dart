@@ -21,7 +21,7 @@ import 'models/health.dart';
 import 'models/user.dart';
 
 GetIt locator = GetIt.instance;
-
+//Test comment
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -291,8 +291,6 @@ class _HealthAppState extends State<HealthApp> {
   Widget _dataNotAdded() {
     return const Text('Failed to add data');
   }
-
-
 
   Widget _content() {
     if (_state == AppStatex.DATA_READY)
