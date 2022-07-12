@@ -22,6 +22,7 @@ import 'models/user.dart';
 
 GetIt locator = GetIt.instance;
 //Test comment
+//Test comment 2
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
