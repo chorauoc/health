@@ -34,7 +34,7 @@ class QLLScreen extends StatelessWidget {
         child: Column(
           children: [
             const HealthAppBar(
-              title: 'Improve QLL',
+              title: 'Improve QOL',
               isBack: true,
             ),
             const HealthSpacer(height: 0.01),
@@ -46,25 +46,25 @@ class QLLScreen extends StatelessWidget {
                         children: [
                           buildSectionHeader('Sleep Goal'),
                           buildProgressSection(
-                            '${health?.totalSleepTime}/${goal?.sleepGoal} Hrs',
+                            '${health?.totalSleepTime}/${goal?.sleepGoal ?? '0'} Hrs',
                             HealthCalculation.calculateSleepTimeValue(health!),
                           ),
                           const HealthSpacer(height: 0.03),
                           buildSectionHeader('Activity Goal'),
                           buildProgressSection(
-                            '${health?.totalCalories}/${goal?.activityGoal} Cal',
+                            '${health?.totalCalories}/${goal?.activityGoal ?? '0'} Cal',
                             HealthCalculation.calculateAtivityValue(health!),
                           ),
                           const HealthSpacer(height: 0.03),
                           buildSectionHeader('Screen Time Goal'),
                           buildProgressSection(
-                            '${health?.totalAppUsage}/${goal?.screenTime} Hrs',
+                            '${health?.totalAppUsage}/${goal?.screenTime ?? '0'} Hrs',
                             HealthCalculation.calculateScreenTimeValue(health!),
                           ),
                           const HealthSpacer(height: 0.03),
                           buildSectionHeader('Steps Goal'),
                           buildProgressSection(
-                            '${health?.totalSteps}/${goal?.stepsGoal} Steps',
+                            '${health?.totalSteps}/${goal?.stepsGoal ?? '0'} Steps',
                             HealthCalculation.calculateStepsValue(health!),
                           ),
                         ],

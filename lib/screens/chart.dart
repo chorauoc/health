@@ -23,6 +23,13 @@ class ChartScreen extends StatefulWidget {
 }
 
 class _ChartScreenState extends State<ChartScreen> {
+
+  @override
+  void initState() {
+    setData(filter: 'W');
+    super.initState();
+  }
+
   List<ChatrData> filtered = [];
   @override
   Widget build(BuildContext context) {
@@ -41,41 +48,9 @@ class _ChartScreenState extends State<ChartScreen> {
                 child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      HealthChartFilter(
-                        title: 'D',
-                        onTap: () {
-                          setData(filter: 'D');
-                        },
-                      ),
-                      HealthChartFilter(
-                        title: 'W',
-                        onTap: () {
-                          setData(filter: 'W');
-                        },
-                      ),
-                      HealthChartFilter(
-                        title: 'M',
-                        onTap: () {
-                          setData(filter: 'M');
-                        },
-                      ),
-                      HealthChartFilter(
-                        title: '6M',
-                        onTap: () {
-                          setData(filter: '6M');
-                        },
-                      ),
-                      HealthChartFilter(
-                        title: 'Y',
-                        onTap: () {
-                          setData(filter: 'Y');
-                        },
-                      ),
-                    ],
-                  ),
+                  ///Filter Section
+                  buildFilter(),
+
                   const HealthSpacer(height: 0.03),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -96,6 +71,8 @@ class _ChartScreenState extends State<ChartScreen> {
                       ),
                     ),
                   ),
+
+                  ///Instruction section
                   if (widget.title == 'Steps')
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -120,7 +97,46 @@ class _ChartScreenState extends State<ChartScreen> {
     );
   }
 
-  void setData({String filter = 'M'}) {
+  ///This will build filter section
+  Widget buildFilter() {
+    return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    HealthChartFilter(
+                      title: 'D',
+                      onTap: () {
+                        setData(filter: 'D');
+                      },
+                    ),
+                    HealthChartFilter(
+                      title: 'W',
+                      onTap: () {
+                        setData(filter: 'W');
+                      },
+                    ),
+                    HealthChartFilter(
+                      title: 'M',
+                      onTap: () {
+                        setData(filter: 'M');
+                      },
+                    ),
+                    HealthChartFilter(
+                      title: '6M',
+                      onTap: () {
+                        setData(filter: '6M');
+                      },
+                    ),
+                    HealthChartFilter(
+                      title: 'Y',
+                      onTap: () {
+                        setData(filter: 'Y');
+                      },
+                    ),
+                  ],
+                );
+  }
+
+  void setData({String filter = 'W'}) {
     getData(filter: filter);
     filtered.clear();
     filtered.addAll(filterData(filter));
@@ -128,7 +144,7 @@ class _ChartScreenState extends State<ChartScreen> {
     setState(() {});
   }
 
-  List<charts.Series<ChatrData, String>> getData({String filter = 'M'}) {
+  List<charts.Series<ChatrData, String>> getData({String filter = 'W',bool onInit = false}) {
     return [
       charts.Series<ChatrData, String>(
           id: widget.title,
@@ -270,4 +286,6 @@ class _ChartScreenState extends State<ChartScreen> {
 <h1 style="color: #5e9ca0;"><br /><br style="font-weight: 400;" /><br /></h1>
           """,
   );
+
+
 }

@@ -34,6 +34,7 @@ class _WorkOutPlanScreenState extends State<WorkOutPlanScreen> {
     plan10
   ];
 
+  ///Assign a plan to a user and save in db
   void updatePlan() {
     User? user = locator<UserProvider>().getSession();
     if (user != null && !user.hasPlaner) {

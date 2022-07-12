@@ -11,6 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../main.dart';
 import '../models/user.dart';
+import '../providers/app_provider.dart';
 import '../providers/user_provider.dart';
 import '../util/dialog.dart';
 
@@ -26,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    _requestPermissions();
+    //_requestPermissions();
     super.initState();
   }
 
@@ -60,17 +61,37 @@ class _LoginScreenState extends State<LoginScreen> {
                   HealthTextFormFeild(
                     controller:usernameController,
                     text: 'Username',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Username is required';
+                      } else if (value.length < 8) {
+                        return 'Username must be greater than 8 characters';
+                      }else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+                        return 'Username should not contain any special charters';
+                      }
+                      return null;
+                    },
                   ),
                   const HealthSpacer(height: 0.03),
                   HealthTextFormFeild(
                     controller:passwordController,
                     text: 'Password',
                     obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password is required';
+                      } else if (value.length < 8) {
+                        return 'Password must be greater than 8 characters';
+                      }else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+                        return 'Password should not contain any special charters';
+                      }
+                      return null;
+                    },
                   ),
                   const HealthSpacer(height: 0.05),
                   HealthButton(
                     text: 'LOGIN',
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         var user = User()
                           ..username = usernameController.text
@@ -98,10 +119,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         } else {
                           if (result == UserState.completed) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DashboardScreen()));
+                            locator<AppProvider>().isLoading = true;
+                            await Future.delayed(const Duration(milliseconds: 100));
+                            await locator<AppProvider>().genHealth(user).then((value) {
+                              locator<AppProvider>().isLoading = false;
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const DashboardScreen()));
+                            });
+
                           }
                         }
                       }

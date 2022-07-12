@@ -55,6 +55,12 @@ class RegisterScreen extends StatelessWidget {
                     HealthTextFormFeild(
                       controller: emailController,
                       text: 'Email',
+                      validator: (value) {
+                        if(value == null || value.isEmpty || !value.contains('@') || !value.contains('.')){
+                          return 'Invalid Email';
+                        }
+                        return null;
+                      },
                     ),
                     const HealthSpacer(height: 0.03),
                     HealthDropDown(
@@ -85,12 +91,32 @@ class RegisterScreen extends StatelessWidget {
                     HealthTextFormFeild(
                       controller: usernameController,
                       text: 'Username',
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Username is required';
+                        } else if (value.length < 8) {
+                          return 'Username must be greater than 8 characters';
+                        }else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+                          return 'Username should not contain any special charters';
+                        }
+                        return null;
+                      },
                     ),
                     const HealthSpacer(height: 0.03),
                     HealthTextFormFeild(
                       controller: passwordController,
                       text: 'Password',
                       obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Password is required';
+                        } else if (value.length < 8) {
+                          return 'Password must be greater than 8 characters';
+                        }else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+                          return 'Password should not contain any special charters';
+                        }
+                        return null;
+                      },
                     ),
                     const HealthSpacer(height: 0.05),
                     HealthButton(

@@ -8,6 +8,7 @@ import 'package:healthapp/components/spacer.dart';
 import 'package:healthapp/main.dart';
 import 'package:healthapp/providers/app_provider.dart';
 import 'package:healthapp/screens/activity.dart';
+import 'package:healthapp/screens/screen_qol.dart';
 import 'package:healthapp/screens/screen_time.dart';
 import 'package:healthapp/screens/sleep_time.dart';
 import 'package:healthapp/screens/steps.dart';
@@ -32,9 +33,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Health? health;
   Goal? goal;
 
+
   @override
   void initState() {
-    _init();
+    //_init();
     super.initState();
   }
 
@@ -49,7 +51,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     user = context.select((UserProvider p) => p.getSession());
-    health = context.select((AppProvider p) => p.getHealth(user!));
+    if(user!=null){
+      health = context.select((AppProvider p) => p.getHealth(user!));
+    }
     goal = context.select((GoalProvider p) => p.getGoals());
 
     return Scaffold(
@@ -77,6 +81,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               title: 'Quality of Life',
                               value: HealthCalculation
                                   .calculateQualityOfLifeValue(health!),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ScreenQOLScreen(
+                                      value: HealthCalculation
+                                          .calculateQualityOfLifeValue(health!),
+                                      usage: health?.qol ?? [],
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),

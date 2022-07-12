@@ -17,10 +17,10 @@ class GoalAdapter extends TypeAdapter<Goal> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Goal()
-      ..sleepGoal = fields[0] as String?
-      ..activityGoal = fields[1] as String?
-      ..screenTime = fields[2] as String?
-      ..stepsGoal = fields[3] as String?
+      ..sleepGoal = fields[0] as String
+      ..activityGoal = fields[1] as String
+      ..screenTime = fields[2] as String
+      ..stepsGoal = fields[3] as String
       ..username = fields[4] as String?;
   }
 

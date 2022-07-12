@@ -25,13 +25,14 @@ class HealthAdapter extends TypeAdapter<Health> {
       ..usage = (fields[5] as List).cast<HealthUsage>()
       ..calories = (fields[6] as List).cast<HealthCalories>()
       ..sleep = (fields[7] as List).cast<HealthSleep>()
-      ..username = fields[8] as String?;
+      ..username = fields[8] as String?
+      ..qol = (fields[9] as List).cast<HealthQol>();
   }
 
   @override
   void write(BinaryWriter writer, Health obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.totalSteps)
       ..writeByte(1)
@@ -49,7 +50,9 @@ class HealthAdapter extends TypeAdapter<Health> {
       ..writeByte(7)
       ..write(obj.sleep)
       ..writeByte(8)
-      ..write(obj.username);
+      ..write(obj.username)
+      ..writeByte(9)
+      ..write(obj.qol);
   }
 
   @override
@@ -203,6 +206,42 @@ class HealthSleepAdapter extends TypeAdapter<HealthSleep> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is HealthSleepAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class HealthQolAdapter extends TypeAdapter<HealthQol> {
+  @override
+  final int typeId = 16;
+
+  @override
+  HealthQol read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return HealthQol()
+      ..datetime = fields[0] as String?
+      ..value = fields[1] as int;
+  }
+
+  @override
+  void write(BinaryWriter writer, HealthQol obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.datetime)
+      ..writeByte(1)
+      ..write(obj.value);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HealthQolAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -64,7 +64,7 @@ class _HealthDrawerState extends State<HealthDrawer> {
               },
             ),
             DrawerItem(
-              title: 'Improve QLL',
+              title: 'Improve QOL',
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(context,

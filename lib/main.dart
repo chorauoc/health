@@ -33,6 +33,7 @@ Future<void> main() async {
   Hive.registerAdapter(HealthCaloriesAdapter());
   Hive.registerAdapter(HealthSleepAdapter());
   Hive.registerAdapter(GoalAdapter());
+  Hive.registerAdapter(HealthQolAdapter());
   await Hive.openBox('app');
   await Hive.openBox('health');
   await Hive.openBox('goals');

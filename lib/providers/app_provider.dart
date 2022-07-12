@@ -4,34 +4,51 @@ import 'package:app_usage/app_usage.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 
 import '../models/health.dart';
 import '../models/user.dart';
+import '../util/calculation.dart';
 
 class AppProvider with ChangeNotifier {
   int frequency = 1;
-  AppState _state = AppState.FETCHING_DATA;
+  AppState _state = AppState.DATA_READY;
   HealthFactory health = HealthFactory();
   List<HealthDataPoint> _healthDataList = [];
   List<AppUsageInfo> _infos = [];
   int _nofSteps = 0;
+  bool _isLoading = false;
+  Health? _health;
+
+
+  bool get isLoading => _isLoading;
+
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
 
   AppState getState() {
     return _state;
   }
 
-  Health getHealth(User user) {
+  Health? getHealth(User user) {
+    return _health;
+  }
+
+  Future<void> genHealth(User user) async {
     var box = Hive.box('health');
 
     var filtered =
         box.values.where((e) => e.username == user.username).toList();
 
+    ////######## - From Plugins - START
     List<HealthSteps> steps = [];
     HealthSteps st = HealthSteps();
     st.datetime = DateTime.now().toString();
     st.value = getSteps();
     if (steps
-        .where((e) => e.datetime == DateTime.now().toString())
+        .where((e) => chekIfMatch(e.datetime!, DateTime.now().toString()))
         .toList()
         .isEmpty) {
       steps.add(st);
@@ -44,7 +61,7 @@ class AppProvider with ChangeNotifier {
         cl.datetime = element.dateFrom.toString();
         cl.value = getTotalAppUsage();
         var filtered = calories
-            .where((e) => e.datetime == element.dateFrom.toString())
+            .where((e) => chekIfMatch(e.datetime!, element.dateFrom.toString()))
             .toList();
         if (filtered.isEmpty) {
           calories.add(cl);
@@ -61,7 +78,7 @@ class AppProvider with ChangeNotifier {
         sl.datetime = element.dateFrom.toString();
         sl.value = element.value.toInt();
         var filtered = sleep
-            .where((e) => e.datetime == element.dateFrom.toString())
+            .where((e) => chekIfMatch(e.datetime!, element.dateFrom.toString()))
             .toList();
         if (filtered.isEmpty) {
           sleep.add(sl);
@@ -75,19 +92,25 @@ class AppProvider with ChangeNotifier {
       us.datetime = element.startDate.toString();
       us.value = element.usage.inHours;
       var filtered = usage
-          .where((e) => e.datetime == element.startDate.toString())
+          .where((e) => chekIfMatch(e.datetime!, element.startDate.toString()))
           .toList();
       if (filtered.isEmpty) {
         usage.add(us);
       }
     }
+    ////######## - From Plugins - END
 
-    ///Data
+
+    ///Data - START
     for (int i = 0; i < 365; i++) {
       HealthSteps st = HealthSteps();
       st.datetime = DateTime.now().subtract(Duration(days: i)).toString();
       st.value = Random().nextInt(8000);
-      steps.add(st);
+      var filtered =
+          steps.where((e) => chekIfMatch(e.datetime!, st.datetime!)).toList();
+      if (filtered.isEmpty) {
+        steps.add(st);
+      }
     }
 
     steps.forEach((element) {
@@ -99,7 +122,11 @@ class AppProvider with ChangeNotifier {
       HealthUsage us = HealthUsage();
       us.datetime = DateTime.now().subtract(Duration(days: i)).toString();
       us.value = Random().nextInt(10);
-      usage.add(us);
+      var filtered =
+          usage.where((e) => chekIfMatch(e.datetime!, us.datetime!)).toList();
+      if (filtered.isEmpty) {
+        usage.add(us);
+      }
     }
 
     usage.forEach((element) {
@@ -111,7 +138,11 @@ class AppProvider with ChangeNotifier {
       HealthSleep sl = HealthSleep();
       sl.datetime = DateTime.now().subtract(Duration(days: i)).toString();
       sl.value = Random().nextInt(8);
-      sleep.add(sl);
+      var filtered =
+          sleep.where((e) => chekIfMatch(e.datetime!, sl.datetime!)).toList();
+      if (filtered.isEmpty) {
+        sleep.add(sl);
+      }
     }
 
     sleep.forEach((element) {
@@ -123,14 +154,57 @@ class AppProvider with ChangeNotifier {
       HealthCalories cl = HealthCalories();
       cl.datetime = DateTime.now().subtract(Duration(days: i)).toString();
       cl.value = Random().nextInt(2000);
-      calories.add(cl);
+      var filtered = calories
+          .where((e) => chekIfMatch(e.datetime!, cl.datetime!))
+          .toList();
+      if (filtered.isEmpty) {
+        calories.add(cl);
+      }
     }
 
     calories.forEach((element) {
       print('calories ${element.datetime} => ${element.value}');
     });
     print('#############################');
+    ///Data - END
 
+
+    ///QQL - From Plugins - START
+    List<HealthQol> qol = [];
+    Health temp = Health()
+      ..username = user.username
+      ..totalAppUsage = getTotalAppUsage()
+      ..totalSleepTime = getTotalSleepTime()
+      ..totalCalories = getTotalCalories()
+      ..totalSteps = getSteps();
+    HealthQol qq = HealthQol();
+    qq.datetime = DateTime.now().toString();
+    qq.value = double.parse((HealthCalculation.calculateQualityOfLifeValue(temp) * 100).toString()).toInt();
+    qol.add(qq);
+    ///QQL - END
+
+    ///QQL Data - START
+    for (int i = 0; i < 365; i++) {
+      HealthQol qqq = HealthQol();
+      qqq.datetime = DateTime.now().subtract(Duration(days: i)).toString();
+      qqq.value = Random().nextInt(90);
+      var filtered = qol
+          .where((e) => chekIfMatch(e.datetime!, qqq.datetime!))
+          .toList();
+      if (filtered.isEmpty) {
+        qol.add(qqq);
+      }
+    }
+
+    qol.forEach((element) {
+      print('qol ${element.datetime} => ${element.value}');
+    });
+    print('#############################');
+
+    ///QQL End - START
+
+
+    ///DB Operation - Start
     if (filtered.isNotEmpty) {
       Health p = filtered[0];
       p.totalAppUsage =
@@ -144,8 +218,9 @@ class AppProvider with ChangeNotifier {
       p.calories.addAll(calories);
       p.sleep.addAll(sleep);
       p.usage.addAll(usage);
+      p.qol.addAll(qol);
       p.save();
-      return p;
+      _health = p;
     } else {
       Health p = Health()
         ..username = user.username
@@ -156,10 +231,17 @@ class AppProvider with ChangeNotifier {
         ..steps.addAll(steps)
         ..calories.addAll(calories)
         ..sleep.addAll(sleep)
+        ..qol.addAll(qol)
         ..usage.addAll(usage);
       box.add(p);
-      return p;
+      _health = p;
     }
+    ///DB Operation - End
+  }
+
+  bool chekIfMatch(String date1, String date2) {
+    return DateFormat.yMd().format(DateTime.parse(date1)) ==
+        DateFormat.yMd().format(DateTime.parse(date2));
   }
 
   int getSteps() {
@@ -287,6 +369,7 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  ///Development purpose only
   Future addData() async {
     double _mgdl = 100.0;
     final now = DateTime.now();

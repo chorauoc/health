@@ -6,13 +6,13 @@ part 'goal.g.dart';
 @HiveType(typeId: 100)
 class Goal extends HiveObject {
   @HiveField(0)
-  String? sleepGoal;
+  String sleepGoal = '0';
   @HiveField(1)
-  String? activityGoal;
+  String activityGoal = '0';
   @HiveField(2)
-  String? screenTime;
+  String screenTime = '0';
   @HiveField(3)
-  String? stepsGoal;
+  String stepsGoal = '0';
   @HiveField(4)
   String? username;
 }

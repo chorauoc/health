@@ -69,8 +69,6 @@ class PredictsScreen extends StatelessWidget {
                       ),
                       buildRisk(
                           'Health Pro has detected higher average of screen ussage during the past mont. By continuing this you have risk of having obesity, sleep problems, chronic neck and back problems and depression.'),
-                      buildRisk(
-                          'Health Pro has detected snoring while you sleeping during the past mont. By continuing this you have risk of having stroke heart disease and arrhythmias')
                     ],
                   ),
                 ),
@@ -85,14 +83,17 @@ class PredictsScreen extends StatelessWidget {
   Widget buildRisk(String title) {
     return Card(
       margin: EdgeInsets.only(bottom: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          title,
-          style: const TextStyle(
-            color: Colors.black,
+      child: Container(
+        color: Colors.redAccent.withOpacity(0.5),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.black,
+            ),
+            textAlign: TextAlign.justify,
           ),
-          textAlign: TextAlign.justify,
         ),
       ),
     );
